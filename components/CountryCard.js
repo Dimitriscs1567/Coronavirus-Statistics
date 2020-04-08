@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, TouchableNativeFeedback } from 'react-native';
 
 const CountryCard = (props) => {
 
@@ -39,55 +39,65 @@ const CountryCard = (props) => {
         }
     }
 
+    
+
     return (
-        <View style={styles.card}>
-            <Text style={styles.title}>{props.country.country}</Text>
-            <View style={styles.row}>
-                <View style={{...styles.circle, backgroundColor: 'blue'}}>
-                    <Text style={styles.dataTitle}>Total Cases:</Text>
-                    <Text style={styles.data}>{formatNumber(props.country.cases.total)}</Text>
+        <View style={styles.touch} >
+            <TouchableNativeFeedback onPress={()=>props.onCountryPress(props.country)} >
+                <View style={styles.card}>
+                    <Text style={styles.title}>{props.country.country}</Text>
+                    <View style={styles.row}>
+                        <View style={{...styles.circle, backgroundColor: 'blue'}}>
+                            <Text style={styles.dataTitle}>Total Cases:</Text>
+                            <Text style={styles.data}>{formatNumber(props.country.cases.total)}</Text>
+                        </View>
+                        <View style={{...styles.circle, backgroundColor: 'red'}}>
+                            <Text style={styles.dataTitle}>New Cases:</Text>
+                            <Text style={styles.data}>{formatNumber(props.country.cases.new)}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.row}>
+                        <View style={{...styles.circle, backgroundColor: 'blue'}}>
+                            <Text style={styles.dataTitle}>Active Cases:</Text>
+                            <Text style={styles.data}>{formatNumber(props.country.cases.active)}</Text>
+                        </View>
+                        <View style={{...styles.circle, backgroundColor: 'red'}}>
+                            <Text style={styles.dataTitle}>Critical Cases:</Text>
+                            <Text style={styles.data}>
+                                {formatNumber(props.country.cases.critical) + ` (${getPercent('critical')})`}
+                            </Text>
+                        </View>
+                    </View>
+                    <View style={styles.row}>
+                        <View style={{...styles.circle, backgroundColor: 'blue'}}>
+                            <Text style={styles.dataTitle}>Total Deaths:</Text>
+                            <Text style={styles.data}>
+                                {formatNumber(props.country.deaths.total) + ` (${getPercent('deaths')})`}
+                            </Text>
+                        </View>
+                        <View style={{...styles.circle, backgroundColor: 'red'}}>
+                            <Text style={styles.dataTitle}>New Deaths:</Text>
+                            <Text style={styles.data}>{formatNumber(props.country.deaths.new)}</Text>
+                        </View>
+                    </View>
                 </View>
-                <View style={{...styles.circle, backgroundColor: 'red'}}>
-                    <Text style={styles.dataTitle}>New Cases:</Text>
-                    <Text style={styles.data}>{formatNumber(props.country.cases.new)}</Text>
-                </View>
-            </View>
-            <View style={styles.row}>
-                <View style={{...styles.circle, backgroundColor: 'blue'}}>
-                    <Text style={styles.dataTitle}>Active Cases:</Text>
-                    <Text style={styles.data}>{formatNumber(props.country.cases.active)}</Text>
-                </View>
-                <View style={{...styles.circle, backgroundColor: 'red'}}>
-                    <Text style={styles.dataTitle}>Critical Cases:</Text>
-                    <Text style={styles.data}>
-                        {formatNumber(props.country.cases.critical) + ` (${getPercent('critical')})`}
-                    </Text>
-                </View>
-            </View>
-            <View style={styles.row}>
-                <View style={{...styles.circle, backgroundColor: 'blue'}}>
-                    <Text style={styles.dataTitle}>Total Deaths:</Text>
-                    <Text style={styles.data}>
-                        {formatNumber(props.country.deaths.total) + ` (${getPercent('deaths')})`}
-                    </Text>
-                </View>
-                <View style={{...styles.circle, backgroundColor: 'red'}}>
-                    <Text style={styles.dataTitle}>New Deaths:</Text>
-                    <Text style={styles.data}>{formatNumber(props.country.deaths.new)}</Text>
-                </View>
-            </View>
+            </TouchableNativeFeedback>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    touch: {
+        overflow: 'hidden',
+        borderRadius: 10,
+        elevation: 5.0,
+        marginVertical: 20,
+    },
     card: {
         width: Dimensions.get('window').width * 0.90,
         backgroundColor: 'orange',
         alignItems: 'center',
-        elevation: 5.0,
         borderRadius: 10,
-        marginVertical: 20,
         padding: 5
     },
     row: {
