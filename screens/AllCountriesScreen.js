@@ -1,12 +1,14 @@
 import React, { useEffect, useState, Fragment } from 'react';
-import { StyleSheet, View, FlatList, ActivityIndicator, Text } from 'react-native';
-import Constants from 'expo-constants';
+import { StyleSheet, View, FlatList, ActivityIndicator, TouchableNativeFeedback } from 'react-native';
 import CountryCard from '../components/CountryCard';
 import { x_rapidapi_host, x_rapidapi_key } from 'react-native-dotenv';
+import { AntDesign } from '@expo/vector-icons'
 
 const AllCountriesScreen = (props) => {
     const [countries, setCountries] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+    const [showFloatButton, setShowFloatButton] = useState(false);
+    const [flatList, setFlatList] = useState(null);
 
     const getData = () => {
         setRefreshing(true);
@@ -56,6 +58,25 @@ const AllCountriesScreen = (props) => {
         getData();
     }, []);
 
+    const handleScroll = (event) => {
+        if(event.nativeEvent.contentOffset.y > 2000){
+            if(!showFloatButton){
+                setShowFloatButton(true);
+            } 
+        }
+        else{
+            if(showFloatButton){
+                setShowFloatButton(false);
+            }
+        }
+    }
+
+    const goToTop = () => {
+        if(flatList){
+            flatList.scrollToOffset({ animated: true, offset: 0 });
+        }
+    }
+
     const onCountryPress = (country) => {
         props.navigation.navigate('Country', { country: country });
     }
@@ -65,6 +86,8 @@ const AllCountriesScreen = (props) => {
         : (
         <Fragment>
             <FlatList
+                ref={(ref) => { setFlatList(ref); }}
+                onScroll={handleScroll}
                 onRefresh={getData}
                 refreshing={refreshing}
                 contentContainerStyle={styles.list}
@@ -72,6 +95,13 @@ const AllCountriesScreen = (props) => {
                 renderItem={item => <CountryCard country={item.item} onCountryPress={onCountryPress} />}
                 keyExtractor={item => item.country}
             />
+            { showFloatButton ? <View style={styles.touchContainer}>
+                <TouchableNativeFeedback onPress={goToTop} >
+                    <View style={styles.floatButton}>
+                        <AntDesign name='arrowup' size={40} />
+                    </View>
+                </TouchableNativeFeedback>
+            </View> : null}
         </Fragment>
         );
 
@@ -85,11 +115,29 @@ const AllCountriesScreen = (props) => {
 
 const styles = StyleSheet.create({
     background: {
-      flex: 1,
-      justifyContent: 'center'
+        flex: 1,
+        justifyContent: 'center'
     },
     list: {
-      alignItems: 'center',
+        alignItems: 'center',
+    },
+    floatButton: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'green',
+        borderRadius: 30,
+    },  
+    touchContainer:{
+        overflow: 'hidden',
+        position: 'absolute',
+        elevation: 5.0,
+        bottom: 20,
+        right: 20,
+        width: 60,
+        height: 60,
+        borderRadius: 30,
     },
 });
 

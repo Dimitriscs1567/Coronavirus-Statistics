@@ -16,7 +16,7 @@ const AppNavigator = (props) => {
                 options={{
                     headerTitle: 'All Countries',
                     headerTitleAlign: 'center',
-                    headerStyle: { backgroundColor: 'green' }
+                    headerStyle: { backgroundColor: 'pink' }
                 }}
             />
             <StackNavigator.Screen 
@@ -27,7 +27,7 @@ const AppNavigator = (props) => {
                         return {
                             headerTitle: navData.route.params.country.country,
                             headerTitleAlign: 'center',
-                            headerStyle: { backgroundColor: 'green' }
+                            headerStyle: { backgroundColor: 'pink' }
                         };
                     }
                 }

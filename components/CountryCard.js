@@ -47,21 +47,21 @@ const CountryCard = (props) => {
                 <View style={styles.card}>
                     <Text style={styles.title}>{props.country.country}</Text>
                     <View style={styles.row}>
-                        <View style={{...styles.circle, backgroundColor: 'blue'}}>
+                        <View style={{...styles.circle, backgroundColor: '#95cff3'}}>
                             <Text style={styles.dataTitle}>Total Cases:</Text>
                             <Text style={styles.data}>{formatNumber(props.country.cases.total)}</Text>
                         </View>
-                        <View style={{...styles.circle, backgroundColor: 'red'}}>
+                        <View style={{...styles.circle, backgroundColor: '#95cff3'}}>
                             <Text style={styles.dataTitle}>New Cases:</Text>
                             <Text style={styles.data}>{formatNumber(props.country.cases.new)}</Text>
                         </View>
                     </View>
                     <View style={styles.row}>
-                        <View style={{...styles.circle, backgroundColor: 'blue'}}>
+                        <View style={{...styles.circle, backgroundColor: '#95cff3'}}>
                             <Text style={styles.dataTitle}>Active Cases:</Text>
                             <Text style={styles.data}>{formatNumber(props.country.cases.active)}</Text>
                         </View>
-                        <View style={{...styles.circle, backgroundColor: 'red'}}>
+                        <View style={{...styles.circle, backgroundColor: '#95cff3'}}>
                             <Text style={styles.dataTitle}>Critical Cases:</Text>
                             <Text style={styles.data}>
                                 {formatNumber(props.country.cases.critical) + ` (${getPercent('critical')})`}
@@ -69,13 +69,13 @@ const CountryCard = (props) => {
                         </View>
                     </View>
                     <View style={styles.row}>
-                        <View style={{...styles.circle, backgroundColor: 'blue'}}>
+                        <View style={{...styles.circle, backgroundColor: '#95cff3'}}>
                             <Text style={styles.dataTitle}>Total Deaths:</Text>
                             <Text style={styles.data}>
                                 {formatNumber(props.country.deaths.total) + ` (${getPercent('deaths')})`}
                             </Text>
                         </View>
-                        <View style={{...styles.circle, backgroundColor: 'red'}}>
+                        <View style={{...styles.circle, backgroundColor: '#95cff3'}}>
                             <Text style={styles.dataTitle}>New Deaths:</Text>
                             <Text style={styles.data}>{formatNumber(props.country.deaths.new)}</Text>
                         </View>
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     },
     card: {
         width: Dimensions.get('window').width * 0.90,
-        backgroundColor: 'orange',
+        backgroundColor: '#5b7180',
         alignItems: 'center',
         borderRadius: 10,
         padding: 5
@@ -116,19 +116,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },  
     title: {
-        fontSize: 25,
+        fontSize: 28,
         fontWeight: 'bold',
         color: 'white'
     },
     dataTitle:{
-        fontSize: 19,
+        fontSize: 21,
         fontWeight: 'bold',
-        color: 'white'
+        color: 'black'
     },
     data:{
         fontSize: 19,
         fontWeight: 'bold',
-        color: 'white'
+        color: '#38361c'
     }
 });
 

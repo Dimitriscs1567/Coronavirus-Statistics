@@ -5,13 +5,13 @@ const CountryScreen = () => {
     
     return <View>
         <Text>
-            Country Works
+            Country Works for me
         </Text>
     </View>
 }
 
 const styles = StyleSheet.create({
-    
+
 });
 
 export default CountryScreen;
