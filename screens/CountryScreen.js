@@ -1,8 +1,9 @@
 import React, {useState} from 'react'
-import { View, Text, StyleSheet, Platform, ActivityIndicator } from 'react-native'
-import { formatNumber, getPercent, formatDate } from '../utils/utils'
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { View, StyleSheet, Platform, ScrollView } from 'react-native'
+import { formatDate } from '../utils/utils'
 import { x_rapidapi_host, x_rapidapi_key } from 'react-native-dotenv';
+import { LineChart } from "react-native-chart-kit";
+import CountryStats from '../components/CountryStats';
 
 const CountryScreen = (props) => {
 
@@ -66,110 +67,21 @@ const CountryScreen = (props) => {
         });
     }
 
-    if(loading){
-        return <View style={styles.main}>
-            <View style={styles.titleContainer}>
-                <Text style={styles.pressableText} onPress={datePicker}>
-                    {formatDate(date)}
-                </Text>
-            </View>
-            <View style={styles.loading}>
-                <ActivityIndicator size="large" color="blue" />
-            </View>
+    return <ScrollView >
+            <CountryStats 
+                showDatePicker={showDatePicker}
+                onChange={onChange}
+                date={date}
+                datePicker={datePicker}
+                country={country}
+                loading={loading}
+            />
+        <View>
         </View>
-    }
-
-    return <View style={styles.main}>
-        <View style={styles.titleContainer}>
-            <Text style={styles.pressableText} onPress={datePicker}>
-                {formatDate(date)}
-            </Text>
-        </View>
-        <View style={styles.row}>
-            <View style={styles.miniRow}>
-                <Text style={styles.text}>
-                    Total Cases:{'\n' + formatNumber(country.cases.total)}
-                </Text>
-            </View>
-            <View style={styles.miniRow}>
-                <Text style={styles.text}>
-                    New Cases:{'\n' + formatNumber(country.cases.new)}
-                </Text>
-            </View>
-        </View>
-        <View style={styles.row}>
-            <View style={styles.miniRow}>
-                <Text style={styles.text}>
-                    Active Cases:{'\n' + formatNumber(country.cases.active)}
-                </Text>
-            </View>
-            <View style={styles.miniRow}>
-                <Text style={styles.text}>
-                    Critical Cases:{
-                        '\n' + formatNumber(country.cases.critical)
-                        + ` (${getPercent(country, 'critical')})`
-                    }
-                </Text>
-            </View>
-        </View>
-        <View style={styles.row}>
-            <View style={styles.miniRow}>
-                <Text style={styles.text}>
-                    Total Deaths:{
-                        '\n' + formatNumber(country.deaths.total)
-                        + ` (${getPercent(country, 'deaths')})`
-                    }
-                </Text>
-            </View>
-            <View style={styles.miniRow}>
-                <Text style={styles.text}>
-                    New Deaths:{'\n' + formatNumber(country.deaths.new)}
-                </Text>
-            </View>
-            { showDatePicker && (
-                <DateTimePicker 
-                    mode='date'
-                    onChange={onChange}
-                    value={date}
-                    minimumDate={new Date('2020-01-01')}
-                    maximumDate={new Date(Date.now())}
-                />
-            )}
-        </View>
-    </View>
+    </ScrollView>
 }
 
 const styles = StyleSheet.create({
-    main: {
-        flexDirection: 'column',
-        flex: 1,
-    },
-    titleContainer: {
-        alignItems: 'center',
-        margin: 20,
-    },
-    row: {
-        flexDirection: 'row',
-        margin: 20,
-    },
-    miniRow: {
-        flex: 1,
-    },  
-    text: {
-        fontSize: 19,
-        textAlign: 'center'
-    },
-    pressableText:{
-        fontSize: 21,
-        color: 'blue',
-        fontWeight: 'bold',
-        textDecorationLine: 'underline'
-    },
-    loading:{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
 });
 
 export default CountryScreen;
