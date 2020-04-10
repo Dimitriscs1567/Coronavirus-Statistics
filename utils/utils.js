@@ -24,12 +24,27 @@ export const formatNumber = (num) => {
 }
 
 export const  getPercent = (country, type) => {
+
     if(type === 'critical'){
+        if(country.cases.critical === 0 || country.cases.active === 0){
+            return 0 + "%";
+        }
+
         return (country.cases.critical * 100 / country.cases.active)
                 .toFixed(1).toString() + "%";
     }
     else{
+        if(country.deaths.total === 0 || country.cases.total === 0){
+            return 0 + "%";
+        }
+
         return (country.deaths.total * 100 / country.cases.total)
                 .toFixed(1).toString() + "%";
     }
+}
+
+export const formatDate = (date) => {
+    const dateString = date.toISOString();
+
+    return dateString.split('T')[0];
 }
