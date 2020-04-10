@@ -14,20 +14,20 @@ const AllCountriesScreen = (props) => {
         setRefreshing(true);
 
         fetch("https://covid-193.p.rapidapi.com/statistics", {
-        "method": "GET",
-        "headers": {
-            "x-rapidapi-host": `${x_rapidapi_host}`,
-            "x-rapidapi-key": `${x_rapidapi_key}`
-        }
+            "method": "GET",
+            "headers": {
+                "x-rapidapi-host": `${x_rapidapi_host}`,
+                "x-rapidapi-key": `${x_rapidapi_key}`
+            }
         }).then(response => {
-        response.json().then(result => {
-            setRefreshing(false);
-            setCountries(filterData(result.response))
-        })
-        .catch(err => {
-            setRefreshing(false);
-            console.log(err);
-        });
+            response.json().then(result => {
+                setRefreshing(false);
+                setCountries(filterData(result.response))
+            })
+            .catch(err => {
+                setRefreshing(false);
+                console.log(err);
+            });
         })
         .catch(err => {
         setRefreshing(false);
@@ -37,7 +37,12 @@ const AllCountriesScreen = (props) => {
 
     const filterData = (unfilteredCountries) => {
         const unsortedCountries = unfilteredCountries.filter(
-        c => c.country !== 'All'
+            c => c.country !== 'Europe'
+                && c.country !== 'Asia'
+                && c.country !== 'Africa'
+                && c.country !== 'Oceania'
+                && c.country !== 'North-America'
+                && c.country !== 'South-America'
         );
 
         unsortedCountries.sort((c1, c2) => {

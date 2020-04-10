@@ -1,45 +1,8 @@
 import React from 'react'
 import { StyleSheet, View, Text, Dimensions, TouchableNativeFeedback } from 'react-native';
+import { formatNumber, getPercent } from '../utils/utils'
 
-const CountryCard = (props) => {
-
-    const formatNumber = (num) => {
-        if(!num){
-            return 0;
-        }
-
-        if(num.toString().charAt(0) === '+'){
-            num = num.substring(1, num.length);
-        }
-
-        let stringNum = num.toString();
-        const length = stringNum.length;
-        const exact = length % 3 === 0;
-        const dots = exact ? Math.floor(length / 3) - 1 : Math.floor(length / 3);
-       
-        for(let i=1; i<=dots; i++){
-            const dotIndex = length - (i*3);
-            
-            stringNum = stringNum.substring(0, dotIndex) 
-                        + '.' 
-                        +  stringNum.substring(dotIndex, length + (i-1));
-        }
-
-        return stringNum;
-    } 
-
-    const getPercent = (type) => {
-        if(type === 'critical'){
-            return (props.country.cases.critical * 100 / props.country.cases.active)
-                    .toFixed(1).toString() + "%";
-        }
-        else{
-            return (props.country.deaths.total * 100 / props.country.cases.total)
-                    .toFixed(1).toString() + "%";
-        }
-    }
-
-    
+const CountryCard = (props) => {    
 
     return (
         <View style={styles.touch} >
@@ -64,7 +27,7 @@ const CountryCard = (props) => {
                         <View style={{...styles.circle, backgroundColor: '#95cff3'}}>
                             <Text style={styles.dataTitle}>Critical Cases:</Text>
                             <Text style={styles.data}>
-                                {formatNumber(props.country.cases.critical) + ` (${getPercent('critical')})`}
+                                {formatNumber(props.country.cases.critical) + ` (${getPercent(props.country, 'critical')})`}
                             </Text>
                         </View>
                     </View>
@@ -72,7 +35,7 @@ const CountryCard = (props) => {
                         <View style={{...styles.circle, backgroundColor: '#95cff3'}}>
                             <Text style={styles.dataTitle}>Total Deaths:</Text>
                             <Text style={styles.data}>
-                                {formatNumber(props.country.deaths.total) + ` (${getPercent('deaths')})`}
+                                {formatNumber(props.country.deaths.total) + ` (${getPercent(props.country, 'deaths')})`}
                             </Text>
                         </View>
                         <View style={{...styles.circle, backgroundColor: '#95cff3'}}>
