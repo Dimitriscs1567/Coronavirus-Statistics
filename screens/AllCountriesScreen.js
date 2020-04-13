@@ -1,14 +1,24 @@
 import React, { useEffect, useState, Fragment } from 'react';
-import { StyleSheet, View, FlatList, ActivityIndicator, TouchableNativeFeedback } from 'react-native';
+import { 
+    StyleSheet, 
+    View, 
+    FlatList, 
+    ActivityIndicator, 
+    TouchableNativeFeedback, 
+    TextInput,
+    Text
+} from 'react-native';
 import CountryCard from '../components/CountryCard';
 import { x_rapidapi_host, x_rapidapi_key } from 'react-native-dotenv';
 import { AntDesign } from '@expo/vector-icons'
 
 const AllCountriesScreen = (props) => {
     const [countries, setCountries] = useState([]);
+    const [filteredCountries, setFilteredCountries] = useState([])
     const [refreshing, setRefreshing] = useState(false);
     const [showFloatButton, setShowFloatButton] = useState(false);
     const [flatList, setFlatList] = useState(null);
+    const [filter, setFilter] = useState('');
 
     const getData = () => {
         setRefreshing(true);
@@ -23,6 +33,7 @@ const AllCountriesScreen = (props) => {
             response.json().then(result => {
                 setRefreshing(false);
                 setCountries(filterData(result.response))
+                getFilteredCountries(filterData(result.response));
             })
             .catch(err => {
                 setRefreshing(false);
@@ -59,6 +70,17 @@ const AllCountriesScreen = (props) => {
         return unsortedCountries;
     }
 
+    const getFilteredCountries = (allCountries, tempFilter)=>{
+        const finalFilter = tempFilter ?? filter;
+
+        if(finalFilter !== ''){
+            setFilteredCountries(allCountries.filter(c => c.country.includes(finalFilter)))
+        }
+        else{
+            setFilteredCountries(allCountries)
+        }
+    }
+
     useEffect(() => {
         getData();
     }, []);
@@ -86,28 +108,37 @@ const AllCountriesScreen = (props) => {
         props.navigation.navigate('Country', { country: country });
     }
 
+    const changeFilter = (text) => {
+        setFilter(text);
+        getFilteredCountries(countries, text);
+    }
+
     const body = countries.length === 0
         ? <ActivityIndicator size="large" color="blue" />
         : (
-        <Fragment>
-            <FlatList
-                ref={(ref) => { setFlatList(ref); }}
-                onScroll={handleScroll}
-                onRefresh={getData}
-                refreshing={refreshing}
-                contentContainerStyle={styles.list}
-                data={countries}
-                renderItem={item => <CountryCard country={item.item} onCountryPress={onCountryPress} />}
-                keyExtractor={item => item.country}
-            />
-            { showFloatButton ? <View style={styles.touchContainer}>
-                <TouchableNativeFeedback onPress={goToTop} >
-                    <View style={styles.floatButton}>
-                        <AntDesign name='arrowup' size={40} />
-                    </View>
-                </TouchableNativeFeedback>
-            </View> : null}
-        </Fragment>
+            <Fragment>
+                <View style={styles.search}>
+                    <Text style={styles.searchText}>Search: </Text>
+                    <TextInput onChangeText={changeFilter} style={styles.input} />
+                </View>
+                <FlatList
+                    ref={(ref) => { setFlatList(ref); }}
+                    onScroll={handleScroll}
+                    onRefresh={getData}
+                    refreshing={refreshing}
+                    contentContainerStyle={styles.list}
+                    data={filteredCountries}
+                    renderItem={item => <CountryCard country={item.item} onCountryPress={onCountryPress} />}
+                    keyExtractor={item => item.country}
+                />
+                { showFloatButton ? <View style={styles.touchContainer}>
+                    <TouchableNativeFeedback onPress={goToTop} >
+                        <View style={styles.floatButton}>
+                            <AntDesign name='arrowup' size={40} />
+                        </View>
+                    </TouchableNativeFeedback>
+                </View> : null}
+            </Fragment>
         );
 
     return (
@@ -122,6 +153,22 @@ const styles = StyleSheet.create({
     background: {
         flex: 1,
         justifyContent: 'center'
+    },
+    search: {
+        flexDirection: 'row',
+        margin: 20.0,
+        alignItems: 'center',
+    }, 
+    searchText: {
+        fontSize: 22.0,
+    },
+    input: {
+        fontSize: 20.0,
+        flex: 1,
+        borderColor: 'black',
+        borderWidth: 1.0,
+        paddingVertical: 3.0,
+        paddingHorizontal: 6.0
     },
     list: {
         alignItems: 'center',
