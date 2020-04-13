@@ -48,3 +48,11 @@ export const formatDate = (date) => {
 
     return dateString.split('T')[0];
 }
+
+export const formatDateForChart = (date) => {
+    const dateString = date.toISOString();
+
+    const parts = dateString.split('T')[0].split('-');
+
+    return parts[2]  + '/' + parts[1];
+} 

@@ -25,7 +25,7 @@ const CountryStats = (props) => {
                 mode='date'
                 onChange={props.onChange}
                 value={props.date}
-                minimumDate={new Date('2020-01-01')}
+                minimumDate={new Date('2020-03-21')}
                 maximumDate={new Date(Date.now())}
             />
         )}
