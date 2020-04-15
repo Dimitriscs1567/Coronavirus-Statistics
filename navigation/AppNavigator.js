@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack' 
 import AllCountriesScreen from '../screens/AllCountriesScreen';
 import CountryScreen from '../screens/CountryScreen';
+import { StyleSheet } from 'react-native';
 
 const StackNavigator = createStackNavigator();
 
@@ -16,7 +17,7 @@ const AppNavigator = (props) => {
                 options={{
                     headerTitle: 'All Countries',
                     headerTitleAlign: 'center',
-                    headerStyle: { backgroundColor: 'pink' }
+                    headerStyle: styles.headerStyle
                 }}
             />
             <StackNavigator.Screen 
@@ -27,7 +28,7 @@ const AppNavigator = (props) => {
                         return {
                             headerTitle: navData.route.params.country.country,
                             headerTitleAlign: 'center',
-                            headerStyle: { backgroundColor: 'pink' }
+                            headerStyle: styles.headerStyle
                         };
                     }
                 }
@@ -35,5 +36,11 @@ const AppNavigator = (props) => {
         </StackNavigator.Navigator>
     </NavigationContainer>;
 }
+
+const styles = StyleSheet.create({
+    headerStyle: {
+        backgroundColor: 'rgb(39, 88, 107)'
+    }
+});
 
 export default AppNavigator;

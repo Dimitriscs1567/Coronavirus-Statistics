@@ -129,7 +129,7 @@ const CountryScreen = (props) => {
         });
     }
 
-    return <ScrollView >
+    return <ScrollView style={styles.mainView} >
         <CountryStats 
             showDatePicker={showDatePicker}
             onChange={onChange}
@@ -144,6 +144,9 @@ const CountryScreen = (props) => {
 }
 
 const styles = StyleSheet.create({
+    mainView:{
+        backgroundColor: 'rgb(109, 146, 160)',
+    },  
     divider: {
         flexDirection: 'row',
         margin: 10.0,

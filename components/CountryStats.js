@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     },
     pressableText:{
         fontSize: 21,
-        color: 'blue',
+        color: 'rgb(20, 22, 105)',
         fontWeight: 'bold',
         textDecorationLine: 'underline'
     },

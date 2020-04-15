@@ -189,13 +189,14 @@ const AllCountriesScreen = (props) => {
 const styles = StyleSheet.create({
     background: {
         flex: 1,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        backgroundColor: 'rgb(2, 39, 53)'
     },
     search: {
         position: 'absolute',
         flexDirection: 'row',
         top: 15.0,
-        backgroundColor: 'white',
+        backgroundColor: 'rgb(39, 88, 107)',
         width: '50%',
         borderTopRightRadius: 20.0,
         borderBottomRightRadius: 20.0
@@ -226,7 +227,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: '100%',
         height: '100%',
-        backgroundColor: 'green',
+        backgroundColor: 'rgb(39, 88, 107)',
         borderRadius: 30,
     },  
     touchContainer:{
