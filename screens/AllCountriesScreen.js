@@ -6,11 +6,13 @@ import {
     ActivityIndicator, 
     TouchableNativeFeedback, 
     TextInput,
-    Text
+    Animated,
+    Dimensions,
+    Keyboard,
 } from 'react-native';
 import CountryCard from '../components/CountryCard';
 import { x_rapidapi_host, x_rapidapi_key } from 'react-native-dotenv';
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign, FontAwesome } from '@expo/vector-icons'
 
 const AllCountriesScreen = (props) => {
     const [countries, setCountries] = useState([]);
@@ -19,6 +21,10 @@ const AllCountriesScreen = (props) => {
     const [showFloatButton, setShowFloatButton] = useState(false);
     const [flatList, setFlatList] = useState(null);
     const [filter, setFilter] = useState('');
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [leftPosition] = useState(new Animated.Value(
+        - (Dimensions.get('window').width / 2) + 40
+    ));
 
     const getData = () => {
         setRefreshing(true);
@@ -74,7 +80,9 @@ const AllCountriesScreen = (props) => {
         const finalFilter = tempFilter ?? filter;
 
         if(finalFilter !== ''){
-            setFilteredCountries(allCountries.filter(c => c.country.includes(finalFilter)))
+            setFilteredCountries(allCountries.filter(
+                c => c.country.toLowerCase().includes(finalFilter.toLowerCase()))
+            )
         }
         else{
             setFilteredCountries(allCountries)
@@ -113,14 +121,30 @@ const AllCountriesScreen = (props) => {
         getFilteredCountries(countries, text);
     }
 
+    const toggleSearchOpen = ()=>{
+        if(!isSearchOpen){
+            Animated.timing(leftPosition, {
+                toValue: 0,
+                duration: 200,
+            }).start(()=>{
+                setIsSearchOpen(true);
+            });
+        }
+        else{
+            Animated.timing(leftPosition, {
+                toValue: - (Dimensions.get('window').width / 2) + 40,
+                duration: 200,
+            }).start(()=>{
+                setIsSearchOpen(false);
+                Keyboard.dismiss();
+            });
+        }
+    }
+
     const body = countries.length === 0
         ? <ActivityIndicator size="large" color="blue" />
         : (
             <Fragment>
-                <View style={styles.search}>
-                    <Text style={styles.searchText}>Search: </Text>
-                    <TextInput onChangeText={changeFilter} style={styles.input} />
-                </View>
                 <FlatList
                     ref={(ref) => { setFlatList(ref); }}
                     onScroll={handleScroll}
@@ -138,6 +162,19 @@ const AllCountriesScreen = (props) => {
                         </View>
                     </TouchableNativeFeedback>
                 </View> : null}
+                <Animated.View style={{...styles.search, left: leftPosition}}>
+                    <TextInput 
+                        onChangeText={changeFilter} 
+                        style={styles.input} 
+                        editable={isSearchOpen} />
+                    <TouchableNativeFeedback style={styles.searchIcon} onPress={toggleSearchOpen} >
+                        <FontAwesome 
+                            style={styles.searchIcon} 
+                            name='search' 
+                            size={25} 
+                            color={filter !== '' ? 'green' : 'black'} />
+                    </TouchableNativeFeedback>
+                </Animated.View>
             </Fragment>
         );
 
@@ -155,20 +192,31 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     search: {
+        position: 'absolute',
         flexDirection: 'row',
-        margin: 20.0,
-        alignItems: 'center',
+        top: 15.0,
+        backgroundColor: 'white',
+        width: '50%',
+        borderTopRightRadius: 20.0,
+        borderBottomRightRadius: 20.0
     }, 
-    searchText: {
-        fontSize: 22.0,
+    searchIcon: {
+        position: 'absolute',
+        top: 5.0,
+        right: 6.0,
     },
     input: {
         fontSize: 20.0,
         flex: 1,
         borderColor: 'black',
-        borderWidth: 1.0,
+        borderTopWidth: 1.0,
+        borderBottomWidth: 1.0,
+        borderRightWidth: 1.0,
         paddingVertical: 3.0,
-        paddingHorizontal: 6.0
+        paddingLeft: 5.0,
+        paddingRight: 28.0,
+        borderTopRightRadius: 20.0,
+        borderBottomRightRadius: 20.0
     },
     list: {
         alignItems: 'center',

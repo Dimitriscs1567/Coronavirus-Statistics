@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { View, StyleSheet, ActivityIndicator, Dimensions, Text } from 'react-native'
 import { LineChart } from "react-native-chart-kit";
 
@@ -15,7 +15,7 @@ const CountryCharts = (props) => {
         decimalPlaces: 0,
         propsForDots: {
             r: "3",
-        }
+        },
     };
 
     const getLabels = ()=>{
@@ -35,7 +35,30 @@ const CountryCharts = (props) => {
             labels[labels.length - 1] = props.chartStats[props.chartStats.length - 1].day;
         }
 
+        labels[labels.length - 2] = '';
+        labels[labels.length - 3] = '';
+        labels[labels.length - 4] = '';
+
         return labels;
+    }
+
+    const getChart = (title, data)=>{
+        return <Fragment>
+            <Text style={styles.chartTitle}>{title}</Text>
+            <LineChart 
+                width={Dimensions.get("window").width}
+                height={220}
+                data={{
+                    labels: getLabels(),
+                    datasets: [
+                        {
+                            data: data
+                        }
+                    ]
+                }}
+                chartConfig={chartConfig}
+            />
+        </Fragment>
     }
 
     if(props.loading){
@@ -47,48 +70,12 @@ const CountryCharts = (props) => {
     }
 
     return <View style={styles.main}>
-        <Text style={styles.chartTitle}>Total Cases</Text>
-        <LineChart 
-            width={Dimensions.get("window").width}
-            height={220}
-            data={{
-                labels: getLabels(),
-                datasets: [
-                    {
-                        data: props.chartStats.map(stat => stat.totalCases)
-                    }
-                ]
-            }}
-            chartConfig={chartConfig}
-        />
-        <Text style={styles.chartTitle}>New Cases</Text>
-        <LineChart 
-            width={Dimensions.get("window").width}
-            height={220}
-            data={{
-                labels: getLabels(),
-                datasets: [
-                    {
-                        data: props.chartStats.map(stat => stat.newCases)
-                    }
-                ]
-            }}
-            chartConfig={chartConfig}
-        />
-        <Text style={styles.chartTitle}>Total Deaths</Text>
-        <LineChart 
-            width={Dimensions.get("window").width}
-            height={220}
-            data={{
-                labels: getLabels(),
-                datasets: [
-                    {
-                        data: props.chartStats.map(stat => stat.totalDeaths)
-                    }
-                ]
-            }}
-            chartConfig={chartConfig}
-        />
+        {getChart('Total Cases', props.chartStats.map(stat => stat.totalCases))}
+        {getChart('New Cases', props.chartStats.map(stat => stat.newCases))}
+        {getChart('Active Cases', props.chartStats.map(stat => stat.activeCases))}
+        {getChart('Critical Cases', props.chartStats.map(stat => stat.criticalCases))}
+        {getChart('Total Deaths', props.chartStats.map(stat => stat.totalDeaths))}
+        {getChart('New Deaths', props.chartStats.map(stat => stat.newDeaths))}
     </View>
 }
 

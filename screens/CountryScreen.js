@@ -46,7 +46,10 @@ const CountryScreen = (props) => {
         let totalStats = [{
             totalCases: allData[0].cases.total,
             newCases: allData[0].cases.new,
+            activeCases: allData[0].cases.active,
+            criticalCases: allData[0].cases.critical,
             totalDeaths: allData[0].deaths.total,
+            newDeaths: allData[0].deaths.new,
             day: formatDateForChart(new Date(allData[0].time)),
         }];
         let prevDate = new Date(allData[0].time.toString().split('T')[0])
@@ -58,7 +61,10 @@ const CountryScreen = (props) => {
                 totalStats.push({
                     totalCases: allData[i].cases.total,
                     newCases: allData[i].cases.new,
+                    activeCases: allData[i].cases.active,
+                    criticalCases: allData[i].cases.critical,
                     totalDeaths: allData[i].deaths.total,
+                    newDeaths: allData[i].deaths.new,
                     day: formatDateForChart(new Date(allData[i].time)),
                 });
                 prevDate = new Date(newDate.getTime());
