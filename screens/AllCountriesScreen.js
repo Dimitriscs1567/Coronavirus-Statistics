@@ -16,12 +16,14 @@ import { AntDesign, FontAwesome } from '@expo/vector-icons'
 
 const AllCountriesScreen = (props) => {
     const [countries, setCountries] = useState([]);
+    const [continents, setContinents] = useState([]);
     const [filteredCountries, setFilteredCountries] = useState([])
     const [refreshing, setRefreshing] = useState(false);
     const [showFloatButton, setShowFloatButton] = useState(false);
     const [flatList, setFlatList] = useState(null);
     const [filter, setFilter] = useState('');
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [showContinents, setShowContinents] = useState(false);
     const [leftPosition] = useState(new Animated.Value(
         - (Dimensions.get('window').width / 2) + 40
     ));
@@ -38,8 +40,10 @@ const AllCountriesScreen = (props) => {
         }).then(response => {
             response.json().then(result => {
                 setRefreshing(false);
-                setCountries(filterData(result.response))
-                getFilteredCountries(filterData(result.response));
+                setCountries(filterData(result.response)[0])
+                getFilteredCountries(filterData(result.response)[0]);
+
+                setContinents(filterData(result.response)[1]);
             })
             .catch(err => {
                 setRefreshing(false);
@@ -53,27 +57,51 @@ const AllCountriesScreen = (props) => {
     }
 
     const filterData = (unfilteredCountries) => {
-        const unsortedCountries = unfilteredCountries.filter(
-            c => c.country !== 'Europe'
-                && c.country !== 'Asia'
-                && c.country !== 'Africa'
-                && c.country !== 'Oceania'
-                && c.country !== 'North-America'
-                && c.country !== 'South-America'
-        );
+        const unsortedCountries = [];
+        const unsortedContinents = [];
 
-        unsortedCountries.sort((c1, c2) => {
-        if (c1.cases.total > c2.cases.total) {
-            return -1;
-        }
-        else if (c1.cases.total < c2.cases.total) {
-            return 1;
-        }
+        unfilteredCountries.forEach(c => {
+            if(c => c.country === 'Europe'
+                    && c.country === 'Asia'
+                    && c.country === 'Africa'
+                    && c.country === 'Oceania'
+                    && c.country === 'North-America'
+                    && c.country === 'South-America'){
 
-        return 0;
+                unsortedContinents.push(c);
+            }
+            else if(c.country === 'All'){
+                unsortedContinents.push(c);
+                unsortedCountries.push(c);
+            }
+            else{
+                unsortedCountries.push(c);
+            }
         });
 
-        return unsortedCountries;
+        unsortedCountries.sort((c1, c2) => {
+            if (c1.cases.total > c2.cases.total) {
+                return -1;
+            }
+            else if (c1.cases.total < c2.cases.total) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+        unsortedContinents.sort((c1, c2) => {
+            if (c1.cases.total > c2.cases.total) {
+                return -1;
+            }
+            else if (c1.cases.total < c2.cases.total) {
+                return 1;
+            }
+
+            return 0;
+        });
+
+        return [unsortedCountries, unsortedContinents];
     }
 
     const getFilteredCountries = (allCountries, tempFilter)=>{
